@@ -10,7 +10,7 @@
             "args": [
                 "-g",
                 "-o", "bin/program.out",
-                "${fileDirname}/main.c"
+                "${file}"
             ],
             "group": {
                 "kind": "build",
