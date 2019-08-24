@@ -9,7 +9,11 @@
             "command": "gcc",
             "args": [
                 "-g",
-                "-o", "bin/program.out",
+                "-std=c99",
+                "-Wall",
+                "-Werror",
+                "-o",
+                "bin/program.out",
                 "${file}"
             ],
             "group": {
