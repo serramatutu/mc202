@@ -4,17 +4,12 @@
     "version": "2.0.0",
     "tasks": [
         {
-            "label": "build debug",
+            "label": "build",
             "type": "shell",
-            "command": "gcc",
+            "command": "make",
             "args": [
-                "-g",
-                "-std=c99",
-                "-Wall",
-                "-Werror",
-                "-o",
-                "bin/program.out",
-                "${file}"
+                "build",
+                "TARGET=${fileBasenameNoExtension}"
             ],
             "group": {
                 "kind": "build",

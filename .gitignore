@@ -71,3 +71,6 @@ dkms.conf
 
 **/results
 **/tests
+**/testes_abertos
+**/testes_fechados
+**/bin
