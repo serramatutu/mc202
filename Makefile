@@ -28,7 +28,7 @@ makedirs:
 
 .PHONY: testar_abertos testar_fechados
 
-testar_abertos:
+testar_abertos: baixar_abertos
 	@set -e ; \
 	if [ ! -d ${TARGET}/testes_abertos ] ; then \
 		echo "\033[1;31mDiretório 'testes_abertos' não encontrado!\033[0m" ; \
@@ -48,7 +48,7 @@ testar_abertos:
 		echo ; \
 	done
 
-testar_fechados:
+testar_fechados: baixar_fechados
 	@set -e ; \
 	if [ ! -d ${TARGET}/testes_fechados ] ; then \
 		echo "\033[1;31mDiretório 'testes_fechados' não encontrado!\033[0m" ; \
@@ -125,11 +125,10 @@ baixar_abertos:
 	sbx=AmbienteDeTeste ; \
 	lnk=https://susy.ic.unicamp.br:9999/mc202e ; \
 	lab=$$(echo "$(TARGET)" | sed -re 's/lab//') ; \
-	#if [ -f testes_abertos/arq15.res ] ; then \
-	#	echo "Testes abertos já foram baixados." ; \
-	#	exit 0 ; \
-	#fi ; \
-	echo "$$lnk/Lab$$lab-$$sbx/dados/arq15.in" ; \
+	if [ -e $(TARGET)/testes_abertos/arq15.res ] ; then \
+		echo "Testes abertos já foram baixados." ; \
+		exit 0 ; \
+	fi ; \
 	curl -sk "$$lnk/Lab$$lab-$$sbx/dados/arq15.in" | grep -e '<HTML>' ; \
 	if [ $$?  = "0" ] ; then \
 		echo "\033[1;31mCertifique-se de que os testes abertos estejam liberados\033[0m" ; \
@@ -151,10 +150,10 @@ baixar_fechados:
 	sbx=AmbienteDeTeste ; \
 	lnk=https://susy.ic.unicamp.br:9999/mc202e ; \
 	lab=$$(echo "$(TARGET)" | sed -re 's/lab//') ; \
-	#if [ -f testes_fechados/arq25.res ] ; then \
-	#	echo "Testes fechados já foram baixados." ; \
-	#	exit 0 ; \
-	#fi ; \
+	if [ -e $(TARGET)/testes_fechados/arq25.res ] ; then \
+		echo "Testes fechados já foram baixados." ; \
+		exit 0 ; \
+	fi ; \
 	curl -sk "$$lnk/Lab$$lab-$$sbx/dados/arq25.in" | grep -e '<HTML>' ; \
 	if [ $$?  = "0" ] ; then \
 		echo "\033[1;31mCertifique-se de que os testes fechados estejam liberados\033[0m" ; \
