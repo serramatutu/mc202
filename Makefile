@@ -28,7 +28,7 @@ makedirs:
 
 .PHONY: testar_abertos testar_fechados
 
-testar_abertos: baixar_abertos
+testar_abertos: baixar_abertos build
 	@set -e ; \
 	if [ ! -d ${TARGET}/testes_abertos ] ; then \
 		echo "\033[1;31mDiretório 'testes_abertos' não encontrado!\033[0m" ; \
@@ -48,7 +48,7 @@ testar_abertos: baixar_abertos
 		echo ; \
 	done
 
-testar_fechados: baixar_fechados
+testar_fechados: baixar_fechados build
 	@set -e ; \
 	if [ ! -d ${TARGET}/testes_fechados ] ; then \
 		echo "\033[1;31mDiretório 'testes_fechados' não encontrado!\033[0m" ; \
