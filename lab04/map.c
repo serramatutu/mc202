@@ -1,3 +1,9 @@
+/* 
+Lucas Valente Viegas de Oliveira Paes
+RA 220958
+MC202 E
+*/
+
 #include <string.h>
 #include <stdlib.h>
 #include <stdio.h>
@@ -55,7 +61,7 @@ const int _moves[4][2] = {
 };
 
 /**
- * Encontra o caminho desviando de a partir de pos até o símbolo target em map, deixando-o
+ * Encontra o caminho desviando de avoid a partir de pos até o símbolo target em map, deixando-o
  * marcado com pathMarker. Retorna 0 se não obteve sucesso e 1 se teve sucesso.
 */
 int mapFindPath(Map map, int pos[2], char target, const char * avoid, char pathMarker) {
@@ -84,8 +90,8 @@ int mapFindPath(Map map, int pos[2], char target, const char * avoid, char pathM
         pos[1] -= _moves[i][1];
     }
     
-    // desmarca o caminho pois não encontrou target válido
-    map.matrix[pos[1]][pos[0]] = FREE;
+    // desmarca o caminho pois não encontrou target por aqui
+    map.matrix[pos[1]][pos[0]] = val;
 
     return 0;
 }
