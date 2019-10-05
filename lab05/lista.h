@@ -1,0 +1,59 @@
+#ifndef LISTA_H
+#define LISTA_H
+
+#include <stdlib.h>
+
+/**
+ * Nó genérico de uma lista duplamente ligada.
+ * OBS: fiz a lista genérica para poder reutilizá-la em outros labs e for fun :)
+*/
+typedef struct ListNode {
+    struct ListNode * prev;
+    struct ListNode * next;
+
+    void * data;
+} ListNode;
+
+/**
+ * Função de desalocação do dado genérico armazenado pela lista
+*/
+typedef void (*freeData)(void *);
+
+/**
+ * Lista duplamente ligada 
+*/
+typedef struct List {
+    freeData freeFn;
+
+    unsigned int len;
+    unsigned int dataSize;
+
+    ListNode * first;
+} List;
+
+/**
+ * Cria uma lista
+*/
+List * listNew(unsigned int dataSize, freeData freeFn);
+
+/**
+ * Desaloca uma lista
+*/
+void listFree(List * l);
+
+/**
+ * Insere no início da lista
+*/
+ListNode * listInsert(List * l, void* data);
+
+/**
+ * Insere o dado após o nó passado
+*/
+ListNode * listInsertAfter(List * l, ListNode * node, void* data);
+
+/**
+ * Remove o nó da lista
+*/
+void listRemoveNode(List * l, ListNode * node);
+
+#endif
