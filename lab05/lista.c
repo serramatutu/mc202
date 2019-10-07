@@ -1,9 +1,18 @@
+/*
+Lucas Valente Viegas de Oliveira Paes
+RA 220958
+MC202 E
+*/
+
 #include <stdlib.h>
 #include <string.h>
 
 #include "lista.h"
 
-ListNode * _newNode(void* data, unsigned int dataSize) {
+/**
+ * Cria um novo nó
+*/
+static ListNode * _newNode(void* data, unsigned int dataSize) {
     // aloca um novo nó
     ListNode * newNode = malloc(sizeof(ListNode));
     if (newNode == NULL) {
@@ -24,7 +33,10 @@ ListNode * _newNode(void* data, unsigned int dataSize) {
     return newNode;
 }
 
-void _freeNode(List * l, ListNode * node) {
+/**
+ * Desaloca um nó 
+*/
+static void _freeNode(List * l, ListNode * node) {
     // se o tipo armazenado tiver função customizada de desalocação, é preciso chamá-la
     if (l->freeFn != NULL) { 
         l->freeFn(node->data);
@@ -95,7 +107,11 @@ ListNode * listInsertAfter(List * l, ListNode * node, void* data) {
     return newNode;
 }
 
-void listRemoveNode(List * l, ListNode * node) {
+ListNode * listInsertBefore(List * l, ListNode * node, void * data) {
+    return listInsertAfter(l, node->prev, data);
+}
+
+void listRemove(List * l, ListNode * node) {
     l->len--;
 
     node->prev->next = node->next;
@@ -103,11 +119,11 @@ void listRemoveNode(List * l, ListNode * node) {
 
     // no caso de o nó ser o primeiro da lista
     if (node == l->first) {
-        if (node->prev == node) { // se a lista só tem esse nó
+        if (node->next == node) { // se a lista só tem esse nó
             l->first = NULL;
         }
         else {
-            l->first = node->prev;
+            l->first = node->next;
         }
     }
 

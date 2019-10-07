@@ -1,3 +1,9 @@
+/*
+Lucas Valente Viegas de Oliveira Paes
+RA 220958
+MC202 E
+*/
+
 #ifndef LISTA_H
 #define LISTA_H
 
@@ -5,7 +11,6 @@
 
 /**
  * Nó genérico de uma lista duplamente ligada.
- * OBS: fiz a lista genérica para poder reutilizá-la em outros labs e for fun :)
 */
 typedef struct ListNode {
     struct ListNode * prev;
@@ -49,11 +54,16 @@ ListNode * listInsert(List * l, void* data);
 /**
  * Insere o dado após o nó passado
 */
-ListNode * listInsertAfter(List * l, ListNode * node, void* data);
+ListNode * listInsertAfter(List * l, ListNode * node, void * data);
+
+/**
+ * Insere o dado antes do nó passado
+*/
+ListNode * listInsertBefore(List * l, ListNode * node, void * data);
 
 /**
  * Remove o nó da lista
 */
-void listRemoveNode(List * l, ListNode * node);
+void listRemove(List * l, ListNode * node);
 
 #endif

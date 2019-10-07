@@ -1,42 +1,45 @@
+/*
+Lucas Valente Viegas de Oliveira Paes
+RA 220958
+MC202 E
+*/
+
 #include <stdlib.h>
 #include <stdio.h>
 
-typedef struct MemoryData {
-    int addr;
-    int len;
-} MemoryData;
+#include "memorymanager.h"
 
-#include "lista.h"
+#define BUF_SIZE 50
 
-MemoryData getData(ListNode * node) {
-    return *(MemoryData*)node->data;
-}
-
-// OBS: fiz a lista genérica para poder reutilizá-la em outros labs e for fun :)
+/* 
+Observação:
+Fiz uma lista genérica com void * para usá-la de novo em futuros labs
+e só for fun pra aprender mais sobre C. Espero que não tenha problema ter feito assim :)
+*/
 int main() {
-    List * l = NULL;
-    l = listNew(sizeof(MemoryData), NULL);
-    if (l == NULL) {
+    unsigned int ops;
+    mm_size memorySize;
+    scanf("%u %u", &ops, &memorySize);
+
+    MemoryManager * mm = mmNew(memorySize);
+    if (mm == NULL) {
         return EXIT_FAILURE;
     }
 
-    int n;
-    scanf("%d ", &n);
-    for(int i=0; i<n; i++) {
-        MemoryData data;
-        scanf("%d %d ", &data.addr, &data.len);
+    for (unsigned int i=0; i<ops; i++) {
+        char op;
+        char params[BUF_SIZE];
 
-        listInsert(l, &data);
+        scanf(" %c", &op);
+        if (op != MM_PRINT) {
+            scanf(" %[^\n]s", params);
+        }
+        if (!mmDoOperation(mm, op, params)) {
+            return EXIT_FAILURE;
+        }
     }
 
-    ListNode* current = l->first;
-    for (int i=0; i<l->len; i++) {
-        MemoryData data = getData(current);
-        printf("Data %d: %d %d", i, data.addr, data.len);
-        current = current->next;
-    }
-
-    listFree(l);
+    mmFree(mm);
 
     return EXIT_SUCCESS;
 }
