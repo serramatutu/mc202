@@ -28,6 +28,16 @@
                 "kind": "test",
                 "isDefault": true
             }
+        },
+        {
+            "type": "shell",
+            "label": "check active file",
+            "command": "make",
+            "args": [
+                "checar_abertos",
+                "TARGET=${fileBasenameNoExtension}"
+            ],
+            "group": "test"
         }
     ]
 }
