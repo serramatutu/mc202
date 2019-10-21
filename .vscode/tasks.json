@@ -37,7 +37,7 @@
                 "checar_abertos",
                 "TARGET=${fileBasenameNoExtension}"
             ],
-            "group": "test"
+            "group": "test",
         }
     ]
 }
