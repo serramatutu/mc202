@@ -6,20 +6,21 @@
 
 EXECUTABLE = bin/${TARGET}/${TARGET}
 
-OBJECTS = $(patsubst ${TARGET}/%.c, ${TARGET}/%.o, $(wildcard ${TARGET}/*.c))
+SOURCES = $(wildcard ${TARGET}/*.c) $(wildcard ./common/*.c)
+OBJECTS = $(patsubst %.c, %.o, ${SOURCES})
 GFLAGS  = -std=c99 -Wall -Werror
 
 build: makedirs $(OBJECTS)
-	gcc $(GFLAGS) bin/${TARGET}/*.o -o $(EXECUTABLE) -lm
+	gcc $(GFLAGS) bin/${TARGET}/*.o bin/common/*.o -o $(EXECUTABLE) -lm
 
 %.o: %.c
-	gcc $(GFLAGS) -g -c $< -o bin/$@
+	gcc $(GFLAGS) -g -Icommon -c $< -o bin/$@
 
 clean:
 	rm -rf bin/
 
 makedirs:
-	mkdir -p bin/${TARGET}
+	mkdir -p bin/common && mkdir -p bin/${TARGET}
 
 
 ###############################################################################################
