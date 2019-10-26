@@ -1,8 +1,3 @@
-/** Lucas Valente Viegas de Oliveira Paes
- * MC202 Turma E
- * Lab 07
-*/
-
 #include "arvore.h"
 
 #include <stdlib.h>
@@ -41,7 +36,7 @@ void copyDataToNode(Tree * tree, TreeNode * node, void * data) {
     }
 }
 
-TreeNode * treeNewNode(Tree * tree, void * data) {
+TreeNode * treeNewNode(Tree * tree, size_t key, void * data) {
     TreeNode * node = malloc(sizeof(TreeNode));
     if (node == NULL) {
         return NULL;
@@ -55,6 +50,8 @@ TreeNode * treeNewNode(Tree * tree, void * data) {
 
     node->hasData = 0;
     copyDataToNode(tree, node, data);
+
+    node->key = key;
 
     node->right = NULL;
     node->left = NULL;
@@ -81,31 +78,63 @@ char isLeaf(TreeNode * node) {
     return node->left == NULL && node->right == NULL;
 }
 
-void treeNodePrintInOrder(TreeNode * node, PrintFunction printer) {
+void treeNodePrintInOrder(TreeNode * node, PrintFunction printer, char spacing) {
     if (node == NULL) {
         return;
     }
     
-    if (!isLeaf(node)) {
+    if (spacing && !isLeaf(node)) {
         printf("( ");
     }
 
-    treeNodePrintInOrder(node->left, printer);
-    if (node->left != NULL) {
+    treeNodePrintInOrder(node->left, printer, spacing);
+    if (spacing && node->left != NULL) {
         printf(" ");
     }
     printer(node->data);
-    if (node->right != NULL) {
+    if (spacing && node->right != NULL) {
         printf(" ");
     }
 
-    treeNodePrintInOrder(node->right, printer);
+    treeNodePrintInOrder(node->right, printer, spacing);
 
-    if (!isLeaf(node)) {
+    if (spacing && !isLeaf(node)) {
         printf(" )");
     }
 }
 
-void treePrintInOrder(Tree * tree, PrintFunction printer) {
-    treeNodePrintInOrder(tree->root, printer);
+void treePrintInOrder(Tree * tree, PrintFunction printer, char spacing) {
+    treeNodePrintInOrder(tree->root, printer, spacing);
+}
+
+static char _nodeInsert(Tree * tree, TreeNode ** root, TreeNode * node) {
+    while (*root != NULL) {
+        if ((*root)->key == node->key) {
+            return 0;
+        }
+
+        TreeNode ** next = &(*root)->left;        
+        if (node->key > (*root)->key) {
+            next = &(*root)->right;
+        }
+
+        root = next;
+    }
+
+    *root = node;
+    return 1;
+}
+
+char treeInsert(Tree * tree, size_t key, void * data) {
+    TreeNode * node = treeNewNode(tree, key, data);
+    if (node == NULL) {
+        return 0;
+    }
+
+    char result = _nodeInsert(tree, &tree->root, node);
+    if (!result) {
+        treeFreeNode(tree, node);
+        // free(node);
+    }
+    return result;
 }

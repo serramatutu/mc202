@@ -1,9 +1,3 @@
-/* 
-Lucas Valente Viegas de Oliveira PAes
-RA 220958
-MC 202 E
-*/
-
 #include <stdlib.h>
 #include <string.h>
 

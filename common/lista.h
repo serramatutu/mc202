@@ -1,9 +1,3 @@
-/*
-Lucas Valente Viegas de Oliveira Paes
-RA 220958
-MC202 E
-*/
-
 #ifndef LISTA_H
 #define LISTA_H
 

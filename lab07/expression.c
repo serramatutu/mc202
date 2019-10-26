@@ -59,7 +59,7 @@ static const char * _readToken(Token * token, const char * expr) {
 #define _getData(node) (*(Token*)(node->data))
 
 static TreeNode * _parseExpressionNodes(Tree * tree, const char ** expr) {
-    TreeNode * node = treeNewNode(tree, NULL);
+    TreeNode * node = treeNewNode(tree, 0, NULL);
     if (node == NULL) {
         return NULL;
     }
@@ -129,5 +129,5 @@ static void _printExpressionData(const void * data) {
 }
 
 void printExpression(Tree * tree) {
-    treePrintInOrder(tree, _printExpressionData);
+    treePrintInOrder(tree, _printExpressionData, 1);
 }

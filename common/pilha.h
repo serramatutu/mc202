@@ -1,9 +1,3 @@
-/* 
-Lucas Valente Viegas de Oliveira PAes
-RA 220958
-MC 202 E
-*/
-
 #ifndef PILHA_H
 #define PILHA_H
 
