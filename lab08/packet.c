@@ -33,7 +33,7 @@ void packetFree(Packet * p) {
 
 Packet * parsePacket(const char *buf) {
     size_t id;
-    char data[PACKET_CONTENT_SIZE];
+    char data[PACKET_CONTENT_SIZE+1];
     sscanf(buf, "%lu%*c%[^\n]8s", &id, data);
 
     return packetNew(id, data);

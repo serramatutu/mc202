@@ -6,7 +6,7 @@
 
 EXECUTABLE = bin/${TARGET}/${TARGET}
 
-SOURCES = $(wildcard ${TARGET}/*.c) $(wildcard ./common/*.c) $(wildcard ./common/links/*.c)
+SOURCES = $(wildcard ${TARGET}/*.c) $(wildcard ./common/*.c)
 OBJECTS = $(patsubst %.c, %.o, ${SOURCES})
 GFLAGS  = -std=c99 -Wall -Werror
 
@@ -14,7 +14,7 @@ build: makedirs $(OBJECTS)
 	gcc $(GFLAGS) bin/${TARGET}/*.o bin/common/*.o -o $(EXECUTABLE) -lm -D"ENV=dev"
 
 %.o: %.c
-	gcc $(GFLAGS) -g -I common -I common/links -c $< -o bin/$@ -D"ENV=dev"
+	gcc $(GFLAGS) -g -I common -c $< -o bin/$@ -D"ENV=dev"
 
 clean:
 	rm -rf bin/

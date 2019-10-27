@@ -3,6 +3,8 @@
  * Lab 07
 */
 
+#define LAB08
+
 #include <stdlib.h>
 #include <stdio.h>
 
