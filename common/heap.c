@@ -78,8 +78,9 @@ Heap * heapNew(size_t capacity, GreaterThan greaterThan, size_t dataSize, FreeFn
 
 void heapFree(Heap * heap) {
     while (heap->size > 0) {
-        heapPop(heap);
+        heapPop(heap, 1);
     }
+    free(heap->values);
     free(heap);
 }
 
@@ -106,20 +107,20 @@ void heapInsert(Heap * heap, size_t key, void * value) {
     ascend(heap, heap->size - 1);
 }
 
-void * heapTop(Heap * heap) {
+const HeapValue * heapPeek(Heap * heap) {
     if (heap->size == 0) {
         return NULL;
     }
 
-    return heap->values[0].value;
+    return heap->values;
 }
 
-void heapPop(Heap * heap) {
+void heapPop(Heap * heap, char shouldFree) {
     if (heap->size == 0) {
         return;
     }
 
-    if (heap->freeFn != NULL) {
+    if (shouldFree && heap->freeFn != NULL) {
         heap->freeFn(heap->values[0].value);
     }
     free(heap->values[0].value);

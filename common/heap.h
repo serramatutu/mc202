@@ -1,5 +1,5 @@
 #ifndef HEAP_H
-#define HEAP_
+#define HEAP_H
 
 #include <stdlib.h>
 
@@ -29,8 +29,8 @@ void heapFree(Heap * heap);
 
 void heapInsert(Heap * heap, size_t key, void * value);
 
-void * heapTop(Heap * heap);
+const HeapValue * heapPeek(Heap * heap);
 
-void heapPop(Heap * heap);
+void heapPop(Heap * heap, char shouldFree);
 
 #endif
