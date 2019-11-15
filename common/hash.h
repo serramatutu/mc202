@@ -4,7 +4,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define HASH_COPRIME_FACTOR 3
+#define CAP_MULTIPLIER 3
 
 typedef size_t (*HashFunction)(const void * data, size_t bytes, size_t max);
 

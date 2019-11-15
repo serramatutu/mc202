@@ -13,11 +13,11 @@ static char stdEqualsFunction(const void * a, size_t aBytes, const void * b, siz
     if (aBytes != bBytes) {
         return 0;
     }
-    return memcmp(a, b, aBytes);
+    return memcmp(a, b, aBytes) == 0;
 }
 
-static size_t jumpHash(Hashmap * hm, void * data, size_t bytes) {
-    return (hm->hashFn(data, bytes, hm->capacity) * HASH_COPRIME_FACTOR) % hm->capacity;
+static size_t jumpHash(size_t hash, size_t max) {
+    return (hash * CAP_MULTIPLIER + 1) % max;
 }
 
 Hashmap * hashmapNew(size_t capacity, HashFunction hashFn, EqualsFunction equalsFn, size_t dataSize, FreeFunction freeFn) {
@@ -26,8 +26,8 @@ Hashmap * hashmapNew(size_t capacity, HashFunction hashFn, EqualsFunction equals
         return NULL;
     }
 
-    // garante que a capacidade é sempre co-primo de HASH_COPRIME_FACTOR
-    capacity = (capacity / HASH_COPRIME_FACTOR + 1) * HASH_COPRIME_FACTOR + 1;
+    // garante que a capacidade é múltiplo de CAP_MULTIPLIER
+    capacity = (capacity / CAP_MULTIPLIER + 1) * CAP_MULTIPLIER;
     hm->data = malloc(capacity * sizeof(HashData));
     if (hm->data == NULL) {
         free(hm);
@@ -78,14 +78,13 @@ static char isElement(Hashmap * hm, HashData * hd, void * key, size_t keyBytes) 
 
 static HashData * find(Hashmap * hm, void * key, size_t keyBytes) {
     size_t hash = hm->hashFn(key, keyBytes, hm->capacity);
-    size_t jump = jumpHash(hm, key, keyBytes);
+    size_t jump = jumpHash(hash, hm->capacity);
 
-    size_t i = 0;
-    while (i < hm->capacity && !empty(hm, hash + i * jump) && equals(hm, hash + i * jump, key, keyBytes)) {
+    size_t i = 0, pos = hash % hm->capacity;
+    while (i < hm->capacity && !empty(hm, pos) && !equals(hm, pos, key, keyBytes)) {
         i++;
+        pos = (hash + i * jump) % hm->capacity;
     }
-
-    size_t pos = hash + i * jump;
 
     return hm->data + pos;
 }
@@ -129,7 +128,7 @@ void * hashmapFind(Hashmap * hm, void * key, size_t keyBytes) {
 char hashmapRemove(Hashmap *hm, void * key, size_t keyBytes) {
     HashData * hd = find(hm, key, keyBytes);
 
-    if (!isElement(hd, key, keyBytes)) {
+    if (!isElement(hm, hd, key, keyBytes)) {
         return 0;
     }
 

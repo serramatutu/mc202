@@ -14,20 +14,27 @@ int main() {
 
     while (op != 'e') {
         char s[50];
-        scanf("%c %s", &op, s);
-        size_t size = strlen(s);
+        scanf(" %c %s", &op, s);
+        size_t size = strlen(s) + 1;
         int data;
+        void * ptr;
 
         switch (op){
             case 'i':
-                scanf("%d", &data);
+                scanf(" %d", &data);
                 hashmapInsert(hm, s, size, &data);
                 break;
             case 'r':
                 hashmapRemove(hm, s, size);
                 break;
             case 'f':
-                printf("%d", _getData(hashmapFind(hm, s, size)));
+                ptr = hashmapFind(hm, s, size);
+                if (ptr == NULL) {
+                    printf("NOT FOUND\n");
+                }
+                else {
+                    printf("FOUND %d\n", _getData(ptr));
+                }
         }
     }
 
