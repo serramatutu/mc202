@@ -86,7 +86,7 @@ checar_abertos:
 		echo "\033[1;34mTestando \033[4;34m$$entrada\033[0m" ; \
 		saida=$$(echo "$$entrada" | sed -re 's/\.in$$/.out/' ) ; \
 		resposta=$$(echo "$$entrada" | sed -re 's/\.in$$/.res/' ) ; \
-		if valgrind -q --leak-check=full ./$(EXECUTABLE) < "$$entrada" > "$$saida" ;  then \
+		if valgrind -q --leak-check=full --track-origins=yes ./$(EXECUTABLE) < "$$entrada" > "$$saida" ;  then \
 			echo "\033[1;32mResultado correto!\033[0m" ; \
 		else \
 			echo "\033[1;31mFalhou!\033[0m" ; \
@@ -105,7 +105,7 @@ checar_fechados:
 		echo "\033[1;34mTestando \033[4;34m$$entrada\033[0m" ; \
 		saida=$$(echo "$$entrada" | sed -re 's/\.in$$/.out/' ) ; \
 		resposta=$$(echo "$$entrada" | sed -re 's/\.in$$/.res/' ) ; \
-		if valgrind -q --leak-check=full ./$(EXECUTABLE) < "$$entrada" > "$$saida" ;  then \
+		if valgrind -q --leak-check=full --track-origins=yes ./$(EXECUTABLE) < "$$entrada" > "$$saida" ;  then \
 			echo "\033[1;32mResultado correto!\033[0m" ; \
 		else \
 			echo "\033[1;31mFalhou!\033[0m" ; \

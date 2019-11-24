@@ -4,8 +4,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-#define CAP_MULTIPLIER 3
-
 typedef size_t (*HashFunction)(const void * data, size_t bytes, size_t max);
 
 typedef void (*FreeFunction)(void *);
@@ -20,7 +18,8 @@ typedef struct HashData {
 } HashData;
 
 typedef struct Hashmap {
-    FreeFunction freeFn;
+    FreeFunction freeKeyFn;
+    FreeFunction freeValueFn;
     size_t dataSize;
 
     HashFunction hashFn;
@@ -32,7 +31,14 @@ typedef struct Hashmap {
     size_t size;
 } Hashmap;
 
-Hashmap * hashmapNew(size_t capacity, HashFunction hashFn, EqualsFunction equalsFn, size_t dataSize, FreeFunction freeFn);
+Hashmap * hashmapNew(
+    size_t capacity, 
+    HashFunction hashFn, 
+    EqualsFunction equalsFn, 
+    size_t dataSize, 
+    FreeFunction freeKeyFn, 
+    FreeFunction freeValueFn
+);
 
 void hashmapFree(Hashmap * hm);
 

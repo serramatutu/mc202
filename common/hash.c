@@ -1,3 +1,4 @@
+#include "numberutils.h"
 #include "hash.h"
 
 static size_t stdHashFunction(const void * data, size_t bytes, size_t max) {
@@ -16,19 +17,13 @@ static char stdEqualsFunction(const void * a, size_t aBytes, const void * b, siz
     return memcmp(a, b, aBytes) == 0;
 }
 
-static size_t jumpHash(size_t hash, size_t max) {
-    return (hash * CAP_MULTIPLIER + 1) % max;
-}
-
-Hashmap * hashmapNew(size_t capacity, HashFunction hashFn, EqualsFunction equalsFn, size_t dataSize, FreeFunction freeFn) {
+Hashmap * hashmapNew(size_t capacity, HashFunction hashFn, EqualsFunction equalsFn, size_t dataSize, FreeFunction freeKeyFn, FreeFunction freeValueFn) {
     Hashmap * hm = malloc(sizeof(Hashmap));
     if (hm == NULL) {
         return NULL;
     }
 
-    // garante que a capacidade é múltiplo de CAP_MULTIPLIER
-    capacity = (capacity / CAP_MULTIPLIER + 1) * CAP_MULTIPLIER;
-    hm->data = malloc(capacity * sizeof(HashData));
+    hm->data = calloc(capacity, sizeof(HashData));
     if (hm->data == NULL) {
         free(hm);
         return NULL;
@@ -38,7 +33,8 @@ Hashmap * hashmapNew(size_t capacity, HashFunction hashFn, EqualsFunction equals
     hm->capacity = capacity;
     hm->size = 0;
 
-    hm->freeFn = freeFn;
+    hm->freeKeyFn = freeKeyFn;
+    hm->freeValueFn = freeValueFn;
     if (hashFn == NULL) {
         hashFn = &stdHashFunction;
     }
@@ -52,12 +48,28 @@ Hashmap * hashmapNew(size_t capacity, HashFunction hashFn, EqualsFunction equals
     return hm;
 }
 
+static void hashdataClear(Hashmap * hm, HashData * hd) {
+    if (hm->freeKeyFn != NULL) {
+        hm->freeKeyFn(hd->key);
+    }
+    free(hd->key);
+
+    if (hm->freeValueFn != NULL) {
+        hm->freeValueFn(hd->value);
+    }
+    free(hd->value);
+
+    hd->key = NULL;
+    hd->value = NULL;
+    hd->keyBytes = 0;
+}
+
 void hashmapFree(Hashmap * hm) {
-    for (size_t i = 0; i < hm->size; i++) {
-        if (hm->freeFn != NULL) {
-            hm->freeFn(hm->data[i].key);
+    for (size_t i = 0; i < hm->capacity; i++) {
+        HashData * hd = hm->data + i;
+        if (hd->key != NULL) {
+            hashdataClear(hm, hd);
         }
-        free(hm->data[i].key);
     }
     free(hm->data);
 
@@ -78,7 +90,7 @@ static char isElement(Hashmap * hm, HashData * hd, void * key, size_t keyBytes) 
 
 static HashData * find(Hashmap * hm, void * key, size_t keyBytes) {
     size_t hash = hm->hashFn(key, keyBytes, hm->capacity);
-    size_t jump = jumpHash(hash, hm->capacity);
+    size_t jump = coprime(hash, hm->capacity);
 
     size_t i = 0, pos = hash % hm->capacity;
     while (i < hm->capacity && !empty(hm, pos) && !equals(hm, pos, key, keyBytes)) {
@@ -132,15 +144,7 @@ char hashmapRemove(Hashmap *hm, void * key, size_t keyBytes) {
         return 0;
     }
 
-    if (hm->freeFn != NULL) {
-        hm->freeFn(hd->value);
-    }
-    free(hd->value);
-    free(hd->key);
-
-    hd->key = NULL;
-    hd->value = NULL;
-    hd->keyBytes = 0;
+    hashdataClear(hm, hd);
 
     return 1;
 }

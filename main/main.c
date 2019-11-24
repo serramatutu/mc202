@@ -18,14 +18,14 @@ int main() {
         void * ptr;
 
         switch (op){
-            case 'i':
+            case 'i': // insert
                 scanf(" %d", &data);
                 hashmapInsert(hm, s, size, &data);
                 break;
-            case 'r':
+            case 'r': // remove
                 hashmapRemove(hm, s, size);
                 break;
-            case 'f':
+            case 'f': // find
                 ptr = hashmapFind(hm, s, size);
                 if (ptr == NULL) {
                     printf("NOT FOUND\n");

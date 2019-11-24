@@ -3,6 +3,8 @@
 
 #include <stdlib.h>
 
+#include "pilha.h"
+
 typedef struct TreeNode TreeNode;
 typedef void (*FreeFunction)(void *);
 typedef void (*PrintFunction)(const void*);
@@ -41,5 +43,23 @@ void treeNodePrintInOrder(TreeNode * node, PrintFunction printer, char spacing);
 void treePrintInOrder(Tree * tree, PrintFunction printer, char spacing);
 
 char treeInsert(Tree * tree, size_t key, void * data);
+
+char treeEmpty(const Tree * tree);
+
+// Iterators
+
+typedef struct TreeIterator {
+    Tree * tree;
+
+    Stack * stack;
+} TreeIterator;
+
+TreeIterator treeItBegin(Tree * tree);
+
+char treeItEnd(TreeIterator it);
+
+TreeNode * treeItCurrent(TreeIterator it);
+
+char treeItNext(TreeIterator it);
 
 #endif

@@ -138,3 +138,48 @@ char treeInsert(Tree * tree, size_t key, void * data) {
     }
     return result;
 }
+
+char treeEmpty(const Tree * tree) {
+    return tree->root == NULL;
+}
+
+TreeIterator treeItBegin(Tree * tree) {
+    TreeIterator it = {
+        .tree = tree,
+        .stack = stackNew(sizeof(TreeNode *), NULL)
+    };
+
+    TreeNode * current = tree->root;
+    while (current != NULL) {
+        stackPush(it.stack, &current);
+        current = current->left;
+    }
+    
+    return it;
+}
+
+char treeItEnd(TreeIterator it) {
+    if (it.stack->size > 0) {
+        return 0;
+    }
+
+    stackFree(it.stack);
+    return 1;
+}
+
+TreeNode * treeItCurrent(TreeIterator it) {
+    return (TreeNode *)stackTop(it.stack);
+}
+
+char treeItNext(TreeIterator it) {
+    if (it.stack->size == 0) {
+        return 0;
+    }
+
+    TreeNode * current = treeItCurrent(it);
+    if (current->right != NULL) {
+        
+    }
+
+    return 1;
+}

@@ -3,6 +3,13 @@
 
 #include "pilha.h"
 
+void * stackTop(Stack * s) {
+    if (s->size == 0) {
+        return NULL;
+    }
+    return s->top->data;
+}
+
 void stackPop(Stack * s) {
     if (s->top == NULL)
         return;

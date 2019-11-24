@@ -16,7 +16,7 @@ typedef struct Stack {
     StackNode * top;
 } Stack;
 
-#define stackTop(s) (s->top->data);
+void * stackTop(Stack * s);
 
 void stackPop(Stack * s);
 
