@@ -1,4 +1,3 @@
-#include "numberutils.h"
 #include "hash.h"
 
 static size_t stdHashFunction(const void * data, size_t bytes, size_t max) {
@@ -90,7 +89,7 @@ static char isElement(Hashmap * hm, HashData * hd, void * key, size_t keyBytes) 
 
 static HashData * find(Hashmap * hm, void * key, size_t keyBytes) {
     size_t hash = hm->hashFn(key, keyBytes, hm->capacity);
-    size_t jump = coprime(hash, hm->capacity);
+    size_t jump = hm->capacity + 1; // n e n+1 são sempre coprimos
 
     size_t i = 0, pos = hash % hm->capacity;
     while (i < hm->capacity && !empty(hm, pos) && !equals(hm, pos, key, keyBytes)) {
