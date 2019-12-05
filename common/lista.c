@@ -6,7 +6,7 @@
 /**
  * Cria um novo nó
 */
-static ListNode * _newNode(void* data, unsigned int dataSize) {
+static ListNode * _newNode(void* data, size_t dataSize) {
     // aloca um novo nó
     ListNode * newNode = malloc(sizeof(ListNode));
     if (newNode == NULL) {
@@ -54,7 +54,7 @@ void listFree(List * l) {
     free(l);
 }
 
-List * listNew(unsigned int dataSize, freeData freeFn) {
+List * listNew(size_t dataSize, freeData freeFn) {
     List * l = malloc(sizeof(List));
     l->first = NULL;
     l->dataSize = dataSize;
@@ -105,6 +105,15 @@ ListNode * listInsertBefore(List * l, ListNode * node, void * data) {
     return listInsertAfter(l, node->prev, data);
 }
 
+char listRemoveFirst(List * l) {
+    if (l->first == NULL) {
+        return 0
+    }
+    listRemove(l, l->first);
+    
+    return 1;
+}
+
 void listRemove(List * l, ListNode * node) {
     l->len--;
 
@@ -122,4 +131,56 @@ void listRemove(List * l, ListNode * node) {
     }
 
     _freeNode(l, node);
+}
+
+char listIsEmpty(List * l) {
+    return l->len == 0;
+}
+
+size_t listSize(List * l) {
+    return l->len;
+}
+
+ListIterator listBegin(List * list) {
+    ListIterator it = {
+        .list = list,
+        .current = list->first,
+        .direction = ITERATOR_FORWARD,
+        .pos = 0,
+        .end = listIsEmpty(list)
+    };
+    return it;
+}
+
+ListIterator listRBegin(List * list) {
+    ListIterator it = {
+        .list = list,
+        .current = list->first == NULL ? NULL : list->first->prev,
+        .direction = ITERATOR_REVERSE,
+        .pos = 0,
+        .end = list->len == 0
+    };
+    return it;
+}
+
+ListIterator listNext(ListIterator it) {
+    if (it.end) {
+        return it;
+    }
+
+    it.pos++;
+
+    if (it.pos == it.list->len) {
+        it.end = 1;
+    }
+    else { 
+        if (it.direction == ITERATOR_FORWARD) {
+            it.current = it.current->next;
+        }
+        else {
+            it.current = it.current->prev;
+        }
+    }
+
+    return it;
 }

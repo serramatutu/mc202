@@ -24,8 +24,8 @@ typedef void (*freeData)(void *);
 typedef struct List {
     freeData freeFn;
 
-    unsigned int len;
-    unsigned int dataSize;
+    size_t len;
+    size_t dataSize;
 
     ListNode * first;
 } List;
@@ -33,7 +33,7 @@ typedef struct List {
 /**
  * Cria uma lista
 */
-List * listNew(unsigned int dataSize, freeData freeFn);
+List * listNew(size_t dataSize, freeData freeFn);
 
 /**
  * Desaloca uma lista
@@ -56,8 +56,55 @@ ListNode * listInsertAfter(List * l, ListNode * node, void * data);
 ListNode * listInsertBefore(List * l, ListNode * node, void * data);
 
 /**
+ * Remove o primeiro nó da lista se a lista não estiver vazia
+*/
+char listRemoveFirst(List * l);
+
+/**
  * Remove o nó da lista
 */
 void listRemove(List * l, ListNode * node);
+
+/**
+ * Checa se a lista é vazia
+*/
+char listIsEmpty(List * l);
+
+/**
+ * Obtém o tamanho da lista 
+*/
+size_t listSize(List * l);
+
+/**
+ * Iterador em uma lista duplamente ligada 
+*/
+typedef struct ListIterator {
+    List * list;
+    ListNode * current;
+
+    char direction;
+    size_t pos;
+
+    char end;
+} ListIterator;
+
+
+#define ITERATOR_FORWARD 1
+#define ITERATOR_REVERSE -1
+
+/**
+ * Obtém um iterador da lista 
+*/
+ListIterator listBegin(List * list);
+
+/**
+ * Obtém um iterador reverso da lista 
+*/
+ListIterator listRBegin(List * list);
+
+/**
+ * Obtém o próximo iterador da lista
+*/
+ListIterator listNext(ListIterator it);
 
 #endif
