@@ -5,19 +5,11 @@
 
 #include "grafo.h"
 
-// TODO: remove dis
-static void printAdjacencies(Graph * g) {
-    for (size_t floor = 0; floor < g->size; floor++) {
-        List * out = graphGetOutboundEdges(g, floor);
-        printf("%lu: ", floor);
-        
-        for (ListIterator it = listBegin(out); !it.end; it = listNext(it)) {
-            GraphEdge edge = *((GraphEdge*)it.current->data);
-            printf("%lu ", edge.destination);
-        }
+void printer(GraphEdge edge) {
+    char choice = edge.weight;
+    char elevator = choice == 'X' || choice == 'Y' ? 'A' : 'B';
 
-        printf("\n");
-    }
+    printf("%c %c\n", elevator, choice);
 }
 
 int main() {
@@ -28,20 +20,25 @@ int main() {
         size_t floors;
         scanf("%lu", &floors);
 
-        Graph * g = graphNew(floors);
+        Graph * g = graphNew(2 * (floors + 1));
 
-        for (size_t floor = 0; floor < floors; floor++) {
+        for (size_t floor = floors; floor > 0; floor--) {
             size_t downA, upA, downB, upB;
             scanf("%lu %lu %lu %lu", &downA, &upA, &downB, &upB);
 
-            // insere na ordem reversa de prioridade, pois o grafo 
-            // insere no começo das listas de adjacência
-            graphAddEdge(g, floor, floor + upB);
-            graphAddEdge(g, floor, floor - downB);
-            graphAddEdge(g, floor, floor +upA);
-            graphAddEdge(g, floor, floor - downA);
+            graphAddEdge(g, floor, floor - downA, 'X');
+            graphAddEdge(g, floor, floor + upA, 'Y');
+            graphAddEdge(g, floor, floor - downB, 'W');
+            graphAddEdge(g, floor, floor + upB, 'Z');
         }
 
+        GraphEdge * path = graphBreadthFirstSearch(g, floors, 0);
+        adjustPathPriority(g, path, floors);
+
+        printf("Cenário #%lu\n", i);
+        graphPrintPath(path, &printer, floors, 0);
+        
+        free(path);
         graphFree(g);
     }
 }

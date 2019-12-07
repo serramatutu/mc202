@@ -107,7 +107,7 @@ ListNode * listInsertBefore(List * l, ListNode * node, void * data) {
 
 char listRemoveFirst(List * l) {
     if (l->first == NULL) {
-        return 0
+        return 0;
     }
     listRemove(l, l->first);
     

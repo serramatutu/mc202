@@ -65,30 +65,50 @@ List * graphGetInboundEdges(Graph * graph, size_t node) {
     return graph->inbound[node];
 }
 
-List * graphBreadthFirstSearch(Graph * graph, size_t start, size_t end) {
-    size_t * visited = calloc(graph->size, sizeof(char));
+GraphEdge * graphBreadthFirstSearch(Graph * graph, size_t start, size_t end) {
+    char * visited = calloc(graph->size, sizeof(char));
     List * queue = listNew(sizeof(size_t), NULL);
-    List * path = listNew(sizeof(size_t), NULL);
+    GraphEdge * path = malloc(graph->size * sizeof(GraphEdge));
 
     listInsert(queue, &start);
+    visited[start] = 1;
 
+    char found = 0;
     while (!listIsEmpty(queue)) {
         size_t currentNode = *((size_t *)listBegin(queue).current->data);
-        visited[currentNode] = 1;
+        listRemoveFirst(queue);
 
         if (currentNode == end) {
-            return path;
+            found = 1;
+            break;
         }
 
         for (ListIterator it = listBegin(graph->outbound[currentNode]); !it.end; it = listNext(it)) {
             GraphEdge edge = *((GraphEdge *)it.current->data);
+            
+            if (visited[edge.destination]) {
+                continue;
+            }
 
-            // TODO: i was here
+            visited[edge.destination] = 1;
+            path[edge.destination] = edge;
+            listInsert(queue, &edge.destination);
         }
     }
 
     listFree(queue);
     free(visited);
+    if (!found) {
+        free(path);
+        path = NULL;
+    }
 
     return path;
+}
+
+void graphPrintPath(GraphEdge * path, PrintFunction printer, size_t start, size_t end) {
+    if (path[end].source != start) {
+        graphPrintPath(path, printer, start, path[end].source);
+    }
+    printer(path[end]);
 }

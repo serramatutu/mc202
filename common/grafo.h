@@ -28,6 +28,10 @@ List * graphGetOutboundEdges(Graph * graph, size_t node);
 
 List * graphGetInboundEdges(Graph * graph, size_t node);
 
-List * graphBreadthFirstSearch(Graph * graph, size_t start, size_t end);
+GraphEdge * graphBreadthFirstSearch(Graph * graph, size_t start, size_t end);
+
+typedef void (*PrintFunction)(GraphEdge edge);
+
+void graphPrintPath(GraphEdge * path, PrintFunction printer, size_t start, size_t end);
 
 #endif
